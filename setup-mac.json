@@ -1,0 +1,485 @@
+[
+  {
+    "name": "basics",
+    "configs": [
+      {
+        "name": "Checking for updated core utils",
+        "test": "[ $(bash --version | head -1 | cut -d ' ' -f 4 | cut -d '.' -f 1) -lt 5 ]",
+        "prompt": "Your core utils out of date. Should we update them?",
+        "actions": [
+          "printf \"\\tUpdating core utils! This can take a few minutes...\\n\"",
+          "git clone https://github.com/fabiomaia/linuxify.git /tmp/linuxify &> /dev/null",
+          "pushd /tmp/linuxify/ &> /dev/null",
+          "chmod +x /tmp/linuxify/linuxify &> /dev/null",
+          "yes N | ./linuxify install &> /dev/null",
+          "popd &> /dev/null",
+          "printf \"\\tUpdating core utils! This can take a few minutes...\\n\""
+        ]
+      },
+      {
+        "name": "Would you like to install a custom terminal?",
+        "test": "! command -v iterm2 &> /dev/null && ! command -v kitty &> /dev/null && ! command -v alacritty &> /dev/null",
+        "options": [
+          {
+            "name": "iTerm2",
+            "actions": [
+              "brew install --cask iterm2 &> /dev/null"
+            ]
+          },
+          {
+            "name": "Kitty",
+            "actions": [
+              "brew install --cask kitty &> /dev/null"
+            ]
+          },
+          {
+            "name": "Alacritty",
+            "actions": [
+              "brew install --cask alacritty &> /dev/null"
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "name": "rent-dynamics",
+    "configs": [
+      {
+        "name": "Checking for Slack",
+        "test": "! brew ls slack 2> /dev/null | grep -q 'Slack'",
+        "prompt": "Would you like to install Slack?",
+        "actions": [
+          "brew install --cask slack &> /dev/null",
+          "printf \"Successfully installed Slack!\\n\""
+        ]
+      },
+      {
+        "name": "Checking for 1Password",
+        "test": "! brew ls 1password 2> /dev/null | grep -q '1Password'",
+        "prompt": "Would you like to install 1Password?",
+        "actions": [
+          "brew install --cask 1password &> /dev/null",
+          "printf \"Successfully installed 1Password!\\n\""
+        ]
+      },
+      {
+        "name": "Checking for JetBrains Toolbox",
+        "test": "! brew ls jetbrains-toolbox 2> /dev/null | grep -q 'JetBrains Toolbox'",
+        "prompt": "Would you like to install JetBrains Toolbox?",
+        "actions": [
+          "brew install --cask jetbrains-toolbox &> /dev/null",
+          "printf \"Successfully installed JetBrains Toolbox!\\n\""
+        ]
+      },
+      {
+        "name": "Would you like to install a version of Notion?",
+        "test": "! brew ls notion 2> /dev/null | grep -q 'Notion' && ! brew ls notion-enhanced 2> /dev/null | grep -q 'Notion Enhanced'",
+        "options": [
+          {
+            "name": "Notion",
+            "actions": [
+              "brew install --cask notion &> /dev/null",
+              "printf \"Successfully installed Notion!\\n\""
+            ]
+          },
+          {
+            "name": "Notion Enhanced",
+            "actions": [
+              "brew install --cask notion-enhanced &> /dev/null",
+              "printf \"Successfully installed Notion Enhanced!\\n\""
+            ]
+          }
+        ]
+      },
+      {
+        "name": "Checking for AWS Cli",
+        "test": "! printf \"%s\" $(brew ls awscli 2> /dev/null) | grep -q '/bin/aws'",
+        "prompt": "Would you like to install AWS Cli?",
+        "actions": [
+          "brew install --cask awscli &> /dev/null",
+          "printf \"Successfully installed AWS Cli!\\n\""
+        ]
+      },
+      {
+        "name": "Checking for Dotnet SDK",
+        "test": "! brew ls dotnet-sdk 2> /dev/null | grep -q 'dotnet-sdk'",
+        "prompt": "Would you like to install Dotnet SDK?",
+        "actions": [
+          "brew install dotnet-sdk &> /dev/null",
+          "printf \"Successfully installed Dotnet SDK!\\n\""
+        ]
+      },
+      {
+        "name": "Checking for Python",
+        "test": "! printf \"%s\" $(brew ls python 2> /dev/null) | grep -q 'python3'",
+        "prompt": "Would you like to install Python?",
+        "actions": [
+          "brew install python &> /dev/null",
+          "printf \"Successfully installed Python!\\n\""
+        ]
+      },
+      {
+        "name": "Checking for Node",
+        "test": "! printf \"%s\" $(brew ls node 2> /dev/null ) | grep -q 'node'",
+        "prompt": "Would you like to install Node?",
+        "actions": [
+          "brew install node &> /dev/null",
+          "printf \"Successfully installed Node!\\n\""
+        ]
+      }
+    ]
+  },
+  {
+    "name": "bash",
+    "prompt": "Would you like to configure your system to use bash?",
+    "configs": [
+      {
+        "name": "Checking for an updated version of bash",
+        "test": "[ $(bash --version | head -1 | cut -d ' ' -f 4 | cut -d '.' -f 1) -lt 5 ]",
+        "actions": [
+          "brew install bash",
+          "printf \"Bash updated\""
+        ]
+      },
+      {
+        "name": "Checking to see if the default shell is bash",
+        "test": "! printf \"%s\" \"$SHELL\" | grep -q \"bash\"",
+        "prompt": "You're not running bash as your default shell would you like to make bash the default?",
+        "actions": [
+          "printf \"\\t\"",
+          "chsh -s \"$(brew --prefix)/bin/bash\" &> /dev/null",
+          "printf \"\\tShell has been changed to bash.\\n\"",
+          "printf \"Please restart your terminal and run this script again with bash...\\n\"",
+          "printf \"Ctrl + C to exit the script...\\n\"",
+          "sleep 1000"
+        ]
+      },
+      {
+        "name": "Checking for a ~/.bashrc file",
+        "test": "[ ! -f ~/.bashrc ]",
+        "actions": [
+          "printf \"#!\/usr\/bin\/env bash\" > ~/.bashrc",
+          "printf \"Created basic ~/.bashrc\\n\""
+        ]
+      },
+      {
+        "name": "Checking for homebrew environment in ~/.bashrc",
+        "test": "! cat ~/.bashrc | grep -q '/opt/homebrew/bin/brew shellenv'",
+        "actions": [
+          "printf \"\\n\\n# Load the homebrew basic environment\\neval \\\"\\$(\/opt\/homebrew\/bin\/brew shellenv)\\\"\" >> ~\/.bashrc",
+          "printf \"Added the homebrew basics.\\n\""
+        ]
+      },
+      {
+        "name": "Checking for homebrew's bash-completion package",
+        "test": "! brew leaves | grep -q \"bash-completion\"",
+        "actions": [
+          "brew install bash-competion &> /dev/null",
+          "printf \"Successfully installed bash-completion.\\n\""
+        ]
+      },
+      {
+        "name": "Checking for homebrew autocompletions in your ~/.bashrc",
+        "test": "[ ! -f ~/.bashrc ] || ! cat ~/.bashrc | grep -q 'profile.d/bash_completion.sh'",
+        "actions": [
+          "printf \"\\n\\n# Homebrew autocompletion\\n[[ -r \\\"\\$(brew --prefix)\/etc\/profile.d\/bash_completion.sh\\\" ]] && . \\\"\\$(brew --prefix)\/etc\/profile.d\/bash_completion.sh\\\"\" >> ~\/.bashrc",
+          "printf \"Added homebrew bash completions.\\n\""
+        ]
+      },
+      {
+        "name": "Checking for a ~/.bash_profile file",
+        "test": "[ ! -f ~/.bash_profile ]",
+        "actions": [
+          "printf \"#!\/usr\/bin\/env bash\\n\\nif [ -f ~\/.bashrc ]; then\\n  . ~\/.bashrc\\nfi\\n\" > ~\/.bash_profile",
+          "printf \"Created basic ~/.bash_profile\\n\""
+        ]
+      },
+      {
+        "name": "Checking for a custom ~/.prompt",
+        "test": "[ ! -f ~/.prompt ]",
+        "prompt": "Would you like a better looking bash prompt?",
+        "actions": [
+          "cp ./configs/.prompt ~/",
+          "printf \"Successfully copied ~/.prompt file.\\n\""
+        ]
+      },
+      {
+        "name": "Checking for custom prompt and if it loaded in the ~/.bashrc",
+        "test": "[ -f ~/.prompt ] && ! cat ~/.bashrc | grep -q '. ~/.prompt'",
+        "actions": [
+          "printf \"\\n\\n# Load custom ~/.prompt\\nif [ -f ~\/.prompt ]; then\\n  . ~\/.prompt\\nfi\" >> ~\/.bashrc",
+          "printf \"Added custom prompt loading in the ~/.bashrc.\\n\""
+        ]
+      }
+    ]
+  },
+  {
+    "name": "tmux",
+    "prompt": "Would you like to install and setup tmux?",
+    "configs": [
+      {
+        "name": "Checking for tmux being installed",
+        "test": "! command -v tmux &> /dev/null",
+        "actions": [
+          "brew install tmux",
+          "printf \"Successfully installed tmux\\n\""
+        ]
+      },
+      {
+        "name": "Checking for a ~/.tmux.conf file",
+        "test": "[ ! -f ~/.tmux.conf ]",
+        "prompt": "Would you like to have a basic tmux config file?",
+        "actions": [
+          "cp ./configs/.tmux.conf ~/",
+          "printf \"Successfully created ~/.tmux.conf file.\\n\""
+        ]
+      },
+      {
+        "name": "Checking for tmux autoloading in ~/.bash_profile",
+        "test": "! cat ~/.bash_profile | grep -q 'tmux a -t default'",
+        "prompt": "Would you like to have tmux automatically start when you open a terminal?",
+        "actions": [
+          "printf \"\\n\\n# Autostart tmux if it's installed, and if we're not already in a tmux session\\nif command -v tmux &> \/dev\/null && [ -n \\\"\\$PS1\\\" ] && [[ ! \\\"\\$TERM\\\" =~ screen ]] && [[ ! \\\"\\$TERM\\\" =~ tmux ]] && [ -z \\\"\\$TMUX\\\" ]; then\\n  tmux a -t default || exec tmux new -s default && exit;\\nfi\\n\" >> ~\/.bash_profile",
+          "printf \"Successfully added tmux autostart to ~/.bash_profile.\\n\""
+        ]
+      }
+    ]
+  },
+  {
+    "name": "neovim",
+    "prompt": "Would you like to install and setup neovim?",
+    "configs": [
+      {
+        "name": "Checking for neovim being installed",
+        "test": "! command -v nvim &> /dev/null",
+        "actions": [
+          "brew install neovim",
+          "printf \"Successfully installed neovim\\n\""
+        ]
+      },
+      {
+        "name": "Would you like to install a neovim preset?",
+        "test": "[ -d \"~/.config/nvim/\" ]",
+        "options": [
+          {
+            "name": "AstroNvim (Recommended)",
+            "actions": [
+              "printf \"\tInstalling dependencies...\\n\"",
+              "printf \"\tMake sure you install a NerdFont for your terminal!\\n\"",
+              "brew install python node ripgrep lazygit &> /dev/null",
+              "git clone https://github.com/AstroNvim/AstroNvim ~/.config/nvim &> /dev/null",
+              "cp -r ~/.config/nvim/lua/user_example/ ~/.config/nvim/lua/user/",
+              "nvim --headless -c 'autocmd User PackerComplete quitall' &> /dev/null",
+              "printf \"Successfully installed AstroNvim.\\n\""
+            ]
+          },
+          {
+            "name": "NvChad",
+            "actions": [
+              "printf \"\tInstalling dependencies...\\n\"",
+              "printf \"\tMake sure you install a NerdFont for your terminal!\\n\"",
+              "mkdir -p ~/.config/",
+              "brew install python node ripgrep lazygit &> /dev/null",
+              "git clone https://github.com/NvChad/NvChad ~/.config/nvim --depth 1 &> /dev/null",
+              "nvim --headless -c 'autocmd User PackerComplete quitall' &> /dev/null",
+              "printf \"Successfully installed NvChad.\\n\""
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "name": "utilities",
+    "prompt": "Would you like to install some utilities?",
+    "configs": [
+      {
+        "name": "Checking for bat",
+        "test": "! command -v bat &> /dev/null",
+        "prompt": "Would you like to install bat which is a nice drop in replacement for cat?",
+        "actions": [
+          "brew install bat &> /dev/null",
+          "printf \"Successfully installed bat!\\n\""
+        ]
+      },
+      {
+        "name": "Checking for bat alias in ~/.bashrc",
+        "test": "! cat ~/.bashrc | grep -q 'alias cat='",
+        "prompt": "Would you like to alias cat to bat?",
+        "actions": [
+          "printf \"\\n\\nalias cat='bat'\" >> ~/.bashrc",
+          "printf \"Successfully installed bat alias into ~/.bashrc!\\n\""
+        ]
+      },
+      {
+        "name": "Checking for exa",
+        "test": "! command -v exa &> /dev/null",
+        "prompt": "Would you like to install exa which is a nice drop in replacement for ls?",
+        "actions": [
+          "brew install exa &> /dev/null",
+          "printf \"Successfully installed exa!\\n\""
+        ]
+      },
+      {
+        "name": "Checking for exa alias in ~/.bashrc",
+        "test": "! cat ~/.bashrc | grep -q 'alias ls='",
+        "prompt": "Would you like to alias ls to exa?",
+        "actions": [
+          "printf \"\\n\\nalias ls='exa'\" >> ~/.bashrc",
+          "printf \"Successfully installed exa alias into ~/.bashrc!\\n\""
+        ]
+      }
+    ]
+  },
+  {
+    "name": "mac-tweaks",
+    "prompt": "Would you like to check out the various additional Mac tweaks?",
+    "configs": [
+      {
+        "name": "Ensuring that any System Preferences panels are closed",
+        "actions": [
+          "osascript -e 'tell application \"System Preferences\" to quit'"
+        ]
+      },
+      {
+        "name": "Checking for DefaultKeyBinding.dict file",
+        "test": "[ ! -f ~/Library/KeyBindings/DefaultKeyBinding.dict ]",
+        "prompt": "Would you like a custom KeyBindings file that makes your home and end keys work as expected?",
+        "actions": [
+          "mkdir -p ~/Library/KeyBindings",
+          "cp ./configs/DefaultKeyBinding.dict ~/Library/KeyBindings/",
+          "printf \"Successfully created DefaultKeyBinding.dict file.\\n\""
+        ]
+      },
+      {
+        "name": "Checking Gatekeeper status (Needs password)",
+        "test": "! sudo spctl --status | grep -q 'disabled'",
+        "prompt": "Would you like to disable Gatekeeper? (Prevents running apps from unidentified developers)",
+        "actions": [
+          "sudo spctl --master-disable"
+        ]
+      },
+      {
+        "name": "Checking for all files visible in Finder",
+        "test": "[ $(defaults read com.apple.finder AppleShowAllFiles) != \"YES\" ]",
+        "prompt": "Would you like to always have hidden files visible in Finder?",
+        "actions": [
+          "defaults write com.apple.finder AppleShowAllFiles -string YES"
+        ]
+      },
+      {
+        "name": "Checking if all file extensions are visible",
+        "test": "[ ! $(defaults read NSGlobalDomain AppleShowAllExtensions 2> /dev/null) ]",
+        "prompt": "Would you like to always have hidden files visible in Finder?",
+        "actions": [
+          "defaults write NSGlobalDomain AppleShowAllExtensions -bool true"
+        ]
+      },
+      {
+        "name": "Checking to see if the path bar is always visible",
+        "test": "[ ! $(defaults read com.apple.finder ShowPathbar 2> /dev/null) ]",
+        "prompt": "Would you like the path bar to always be visible in Finder? (Interactive path on the bottom)",
+        "actions": [
+          "defaults write com.apple.finder ShowPathbar -bool true"
+        ]
+      },
+      {
+        "name": "Checking to see if the path is displayed as the title on Finder",
+        "test": "[ ! $(defaults read com.apple.finder _FXShowPosixPathInTitle 2> /dev/null) ]",
+        "prompt": "Would you like the path to be the title of the Finder window? (Text at the top)",
+        "actions": [
+          "defaults write com.apple.finder _FXShowPosixPathInTitle -bool true"
+        ]
+      },
+      {
+        "name": "Checking to see if the folders are grouped when sorting by name",
+        "test": "[ ! $(defaults read com.apple.finder _FXSortFoldersFirst 2> /dev/null) ]",
+        "prompt": "Would you like folders to be kept at the top when sorting by name?",
+        "actions": [
+          "defaults write com.apple.finder _FXSortFoldersFirst -bool true"
+        ]
+      },
+      {
+        "name": "Checking to see if the Finder defaults to list view",
+        "test": "[ $(defaults read com.apple.finder FXPreferredViewStyle 2> /dev/null) != \"Nlsv\" ]",
+        "prompt": "Would you like Finder to default to list view?",
+        "actions": [
+          "defaults write com.apple.finder FXPreferredViewStyle -string \"Nlsv\"",
+          "printf \"\tRemoving all .DS_Store files, from your home directory, recursively to reset per-folder preferences...\\n\tYou'll be asked for your sudo password, and this will take a minute.\\n\\n\"",
+          "sudo find ~ -name \".DS_Store\" -exec rm {} \\; &> /dev/null;"
+        ]
+      },
+      {
+        "name": "Checking to see if the application security message is disabled",
+        "test": "[ ! $(defaults read com.apple.LaunchServices LSQuarantine 2> /dev/null) ]",
+        "prompt": "Would you like disable the \"Are you sure you want to open this application?\" dialog?",
+        "actions": [
+          "defaults write com.apple.LaunchServices LSQuarantine -bool false"
+        ]
+      },
+      {
+        "name": "Restarting processes so that changes take effect",
+        "actions": [
+          "killall Finder &> /dev/null"
+        ]
+      }
+    ]
+  },
+  {
+    "name": "tiling",
+    "prompt": "Would you like to setup a tiling window manager?",
+    "configs": [
+      {
+        "name": "Checking for skhd",
+        "test": "! command -v skhd &> /dev/null",
+        "prompt": "Would you like to install the simple hotkey daemon skhd? (Allows for custom keyboard binding, needed for yabai)",
+        "actions": [
+          "brew install koekeishiya/formulae/skhd &> /dev/null",
+          "brew services start skhd &> /dev/null",
+          "printf \"Successfully installed skhd and enabled the service.\\n\""
+        ]
+      },
+      {
+        "name": "Checking for skhd config file at ~/.skhdrc",
+        "test": "[ ! -f ~/.skhdrc ] && ! cat ~/.skhdrc | grep -q \"zoom-fullscreen\"",
+        "prompt": "Would you like an skhd config file for yabai?",
+        "actions": [
+          "rm ~/.skhdrc &> /dev/null",
+          "cp ./configs/.skhdrc ~/",
+          "printf \"Successfully created skhd config at ~/.skhdrc.\\n\""
+        ]
+      },
+      {
+        "name": "Checking for Yabai",
+        "test": "! command -v yabai &> /dev/null",
+        "prompt": "Would you like to install the tiling window manager Yabai?",
+        "actions": [
+          "brew install koekeishiya/formulae/yabai",
+          "brew services start yabai",
+          "printf \"Successfully installed yabai and enabled the service.\\n\""
+        ]
+      },
+      {
+        "name": "Checking for a yabai config file at ~/.config/yabai/yabairc",
+        "test": "[ ! -f ~/.config/yabai/yabairc ]",
+        "prompt": "Would you like a yabai config file?",
+        "actions": [
+          "mkdir -p ~/.config/yabai/",
+          "cp ./configs/yabairc ~/.config/yabai/",
+          "printf \"Successfully created yabai config at ~/.config/yabai/yabairc.\\n\""
+        ]
+      },
+      {
+        "name": "Checking for Yabai in sudoers file (We'll need your password here)",
+        "test": "! sudo cat /private/etc/sudoers.d/yabai | grep -q \"yabai\"",
+        "prompt": "Would you like to add Yabai as a sudoer for it's scripting?",
+        "actions": [
+          "sudo mkdir -p /private/etc/sudoers.d/",
+          "sudo bash -c \"echo \\\"$(whoami) ALL=(root) NOPASSWD: sha256:$(shasum -a 256 $(which yabai) | cut -d ' ' -f 1) $(which yabai) --load-sa\\\" >> \/private\/etc\/sudoers.d\/yabai\"",
+          "printf \"Successfully created yabai config at ~/.config/yabai/yabairc.\\n\""
+        ]
+      }
+    ]
+  }
+]
