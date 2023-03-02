@@ -176,9 +176,9 @@
       },
       {
         "name": "Checking for homebrew's bash-completion package",
-        "test": "! brew leaves | grep -q \"bash-completion\"",
+        "test": "! brew leaves 2> /dev/null | grep -q \"bash-completion@2\"",
         "actions": [
-          "brew install bash-competion &> /dev/null",
+          "brew install bash-completion@2 &> /dev/null",
           "printf \"Successfully installed bash-completion.\\n\""
         ]
       },
@@ -186,7 +186,7 @@
         "name": "Checking for homebrew autocompletions in your ~/.bashrc",
         "test": "[ ! -f ~/.bashrc ] || ! cat ~/.bashrc | grep -q 'profile.d/bash_completion.sh'",
         "actions": [
-          "printf \"\\n\\n# Homebrew autocompletion\\n[[ -r \\\"\\$(brew --prefix)\/etc\/profile.d\/bash_completion.sh\\\" ]] && . \\\"\\$(brew --prefix)\/etc\/profile.d\/bash_completion.sh\\\"\" >> ~\/.bashrc",
+          "printf \"\\n\\n# Homebrew autocompletion\\nexport BASH_COMPLETION_COMPAT_DIR=\\\"\\$(brew --prefix)\/etc\/bash_completion.d\\\"\\n[[ -r \\\"\\$(brew --prefix)\/etc\/profile.d\/bash_completion.sh\\\" ]] && . \\\"\\$(brew --prefix)\/etc\/profile.d\/bash_completion.sh\\\"\" >> ~\/.bashrc",
           "printf \"Added homebrew bash completions.\\n\""
         ]
       },
