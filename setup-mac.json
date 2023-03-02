@@ -266,7 +266,18 @@
         "test": "[ -d \"~/.config/nvim/\" ]",
         "options": [
           {
-            "name": "AstroNvim (Recommended)",
+            "name": "LazyVim (Recommended)",
+            "actions": [
+              "printf \"\tInstalling dependencies...\\n\"",
+              "printf \"\tMake sure you install a NerdFont for your terminal!\\n\"",
+              "brew install python node ripgrep lazygit fd &> /dev/null",
+              "git clone https://github.com/LazyVim/starter ~/.config/nvim &> /dev/null",
+              "rm -rf ~/.config/nvim/.git",
+              "printf \"Successfully installed LazyVim.\\n\""
+            ]
+          },
+          {
+            "name": "AstroNvim",
             "actions": [
               "printf \"\tInstalling dependencies...\\n\"",
               "printf \"\tMake sure you install a NerdFont for your terminal!\\n\"",
