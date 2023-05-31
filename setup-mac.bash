@@ -2,8 +2,14 @@
 
 printf "You'll need to pay attention and be prompted for your sudo password at various portions of this installation...\n"
 
+<<<<<<< HEAD
 sudo -nv
 
+=======
+printf "We'll collect your sudo password upfront so you don't have to later\n"
+
+sudo -nv
+>>>>>>> e35357e69e25e9e07aa0945ac5f39818404f5c5a
 while true; do sudo -n true; sleep 60; kill -0 "$$" || exit; done 2>/dev/null &
 
 # ------------------------------------------------------------------------------
@@ -20,7 +26,11 @@ if ! command -v brew &> /dev/null; then
   # echo 'eval "$(/opt/homebrew/bin/brew shellenv)"' >> ~/.zprofile
 
   # This should load brew so we can install stuff
-  eval "$(/opt/homebrew/bin/brew shellenv)"
+  if [[ -f "/opt/homebrew/bin/brew" ]]; then
+    eval "$(/opt/homebrew/bin/brew shellenv)"
+  else
+    eval "$(/usr/local/bin/brew shellenv)"
+  fi
 
 else
   printf " - Already satisfied\n"

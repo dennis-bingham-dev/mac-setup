@@ -46,6 +46,8 @@ cHST=$LIGHTGREEN # Color of hostname
 cRWN=$RED # Color of root warning
 cPWD=$BLUE # Color of current directory
 cCMD=$DEFAULT # Color of the command you type
+cGIT=$LIGHTGREEN # Color of the git branch
+cENV=$YELLOW # Color of the virtual environment
 
 # Enable block
 eNL=1  # Have a newline between previous command output and new prompt
@@ -57,8 +59,10 @@ eBGJ=0 # Track background jobs
 eSTJ=0 # Track stopped jobs
 eHOST=1 # Show user and host
 ePWD=1 # Show current directory
+eGIT=1 # Show git branch
+eENV=1 # Show virtual environment
 
-# Block settins
+# Block settings
 MPXT1="0" # Terminal multiplexer threshold 1 value
 MPXT2="2" # Terminal multiplexer threshold 2 value
 BGJT1="0" # Background job threshold 1 value
@@ -66,6 +70,15 @@ BGJT2="2" # Background job threshold 2 value
 STJT1="0" # Stopped job threshold 1 value
 STJT2="2" # Stopped job threshold 2 value
 UHS="@"
+
+function parse_git_branch() {
+        git branch 2> /dev/null | cut -d ' ' -f 2 | xargs
+}
+
+function get_virtual_env() {
+        # Right now only using the python virtual env
+        "$VIRTUAL_ENV"
+}
 
 function promptcmd()
 {
@@ -187,6 +200,21 @@ function promptcmd()
         #=========================================================
         if [ $ePWD -eq 1 ]; then
                 PS1="${PS1}[${cPWD}\w${cBRACKETS}]"
+        fi
+
+        #=========================================================
+        # Git Block
+        #=========================================================
+        GIT_BRANCH=$(parse_git_branch)
+        if [ $eGIT -eq 1 ] && [ ! -z "$GIT_BRANCH" ]; then
+                PS1="${PS1}${cLINES}\342\224\200${cBRACKETS}[${cGIT}${GIT_BRANCH}${cBRACKETS}]"
+        fi
+
+        #=========================================================
+        # Virtual Env
+        #=========================================================
+        if [ $eENV -eq 1 ] && [ ! -z "$VIRTUAL_ENV" ]; then
+                PS1="${PS1}${cLINES}\342\224\200${cBRACKETS}[${cENV}${VIRTUAL_ENV##*/}${cBRACKETS}]"
         fi
 
         #=========================================================
