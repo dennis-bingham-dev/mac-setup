@@ -1,15 +1,9 @@
 #!/bin/bash
 
-printf "You'll need to pay attention and be prompted for your sudo password at various portions of this installation...\n"
-
-<<<<<<< HEAD
-sudo -nv
-
-=======
 printf "We'll collect your sudo password upfront so you don't have to later\n"
 
 sudo -nv
->>>>>>> e35357e69e25e9e07aa0945ac5f39818404f5c5a
+
 while true; do sudo -n true; sleep 60; kill -0 "$$" || exit; done 2>/dev/null &
 
 # ------------------------------------------------------------------------------
